@@ -18,6 +18,6 @@
   },
   "type": "module",
   "devDependencies": {
-    "@neuravoxel/ai-eng": "file:../ai-eng-kit/dist/neuravoxel-ai-eng-0.1.15.tgz"
+    "@neuravoxel/ai-eng": "github:NeuraVoxel/ai-eng-kit#v0.1.16"
   }
 }

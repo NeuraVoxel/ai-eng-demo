@@ -208,17 +208,17 @@ importers:
   .:
     devDependencies:
       '@neuravoxel/ai-eng':
-        specifier: file:../ai-eng-kit/dist/neuravoxel-ai-eng-0.1.15.tgz
-        version: file:../ai-eng-kit/dist/neuravoxel-ai-eng-0.1.15.tgz
+        specifier: github:NeuraVoxel/ai-eng-kit#v0.1.16
+        version: git+ssh://git@github.com/NeuraVoxel/ai-eng-kit.git#ec5a50f363bfe1e4f1c7020d0c31702dfd278914
 
 packages:
 
-  '@neuravoxel/ai-eng@file:../ai-eng-kit/dist/neuravoxel-ai-eng-0.1.15.tgz':
-    resolution: {integrity: sha512-nTe3Lcyi5OFAKyyS9kdeublGfvyb3U6r4lNrQWba6ubAToAvG9VWKf+1eEcqIv9K7RE+B36EBhhlWvcwdy5tGw==, tarball: file:../ai-eng-kit/dist/neuravoxel-ai-eng-0.1.15.tgz}
-    version: 0.1.15
+  '@neuravoxel/ai-eng@git+ssh://git@github.com/NeuraVoxel/ai-eng-kit.git#ec5a50f363bfe1e4f1c7020d0c31702dfd278914':
+    resolution: {commit: ec5a50f363bfe1e4f1c7020d0c31702dfd278914, repo: git@github.com:NeuraVoxel/ai-eng-kit.git, type: git}
+    version: 0.1.16
     engines: {node: ^22.19.0 || >=24.0.0}
     hasBin: true
 
 snapshots:
 
-  '@neuravoxel/ai-eng@file:../ai-eng-kit/dist/neuravoxel-ai-eng-0.1.15.tgz': {}
+  '@neuravoxel/ai-eng@git+ssh://git@github.com/NeuraVoxel/ai-eng-kit.git#ec5a50f363bfe1e4f1c7020d0c31702dfd278914': {}
