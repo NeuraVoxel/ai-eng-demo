@@ -20,7 +20,15 @@ A consumer whose gate cannot install cannot report a note-format result, so the 
 
 The `@neuravoxel/ai-eng` dev dependency is `github:NeuraVoxel/ai-eng-kit#v0.1.16`. The lockfile resolves that tag to commit `ec5a50f`, so an install is reproducible without re-resolving the tag.
 
-The scaffolded workflow is the manager-aware gate that `v0.1.16` emits for a pnpm consumer: `pnpm/action-setup` at the declared `^11.18.0`, `actions/setup-node` at `'22'`, then `pnpm install` and `pnpm exec ai-eng verify-notes .agents/notes`.
+The scaffolded workflow is the manager-aware gate: `pnpm/action-setup` at an exact pnpm version, `actions/setup-node` at `'22'`, then `pnpm install` and `pnpm exec ai-eng verify-notes .agents/notes`.
+
+That version is exact rather than a range. pnpm records the engine it ran under in the lockfile — `importers..packageManagerDependencies` pins `pnpm` and `@pnpm/exe` with integrity — and verifies at install time that the running engine matches that pin (`verifyEngineIdentity`, code `PNPM_ENGINE_IDENTITY_UNVERIFIABLE`). While the declaration was `^11.18.0` and the lockfile pinned `11.18.0`, the runner installed `11.27.0` (the newest `11.x`) and `pnpm install` failed before the gate could run:
+
+```
+Cannot verify the identity of pnpm@11.27.0: the environment lockfile does not pin it.
+```
+
+`package.json` declares `11.18.0` and both workflow files carry the same, matching the lockfile pin.
 
 Bumping the kit is a deliberate act: change the tag in `package.json`, run `pnpm install` to re-pin the lockfile, and re-run `ai-eng init --upgrade .` when the release changes a scaffolded template.
 
@@ -28,6 +36,7 @@ Bumping the kit is a deliberate act: change the tag in `package.json`, run `pnpm
 
 - `pnpm exec ai-eng verify-notes .agents/notes` exits 0.
 - The gate discriminates: a conforming note passes, while a note missing a required section, carrying a `Status:` that disagrees with its lifecycle folder, or holding a proposal-era heading under `implemented/` each exits 1 with the offending rule named.
+- `CI=true pnpm install --frozen-lockfile` exits 0 and leaves `pnpm-lock.yaml` unchanged after the declaration moved from `^11.18.0` to `11.18.0`, so the stricter declaration does not stale the lockfile.
 - Clean-checkout simulation in a temporary directory with no sibling `ai-eng-kit`: `pnpm install --frozen-lockfile` exits 0 and the gate exits 0. The same simulation against the previous `file:` dependency exited 254.
 
 ## Alternatives considered
@@ -38,9 +47,10 @@ Bumping the kit is a deliberate act: change the tag in `package.json`, run `pnpm
 
 ## Consequences
 
-- CI installs the kit from the tag, so the job no longer depends on a sibling checkout existing on the runner.
-- The gate becomes a real check: it now fails on format violations rather than failing on `EBADDEVENGINES` before reading any note.
-- Fetching the tag requires network access to `github.com`. A fully offline runner needs the vendored-tarball channel above, which this decision defers.
+- CI fetches the kit from the tag rather than a sibling checkout. That removes the local-tarball dependency; it does not by itself make the job pass. The first run on `main` failed at `pnpm install` on the engine-version mismatch above.
+- The gate becomes a real check once the install succeeds: it fails on format violations rather than on `EBADDEVENGINES` before reading any note.
+- The dependency resolves to `git+ssh://git@github.com/NeuraVoxel/ai-eng-kit.git`, and that repository is private (its public API returns 404), so a runner has no credentials for it. Whether that blocks the install is unverified: the engine check fails first, so this has not been observed in CI.
+- Local verification cannot cover either failure. The development machine's pnpm equals the lockfile pin, and its SSH key reaches the private repository, so every clean-checkout simulation passed while CI failed.
 
 ## Related
 
