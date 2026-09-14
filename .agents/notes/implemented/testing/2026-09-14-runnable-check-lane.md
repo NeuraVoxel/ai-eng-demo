@@ -40,3 +40,7 @@ The notes gate had the same shape one step milder. It worked, but only when some
 
 - Coverage gating. The testing policy prefers per-source threshold gates; `node --test` needs `--experimental-test-coverage` or an added tool to supply them, and no threshold has been chosen yet.
 - Adopting the kit's Vitest recipe, if the suite outgrows the built-in runner.
+
+## Related
+
+- The runner choice above is superseded by [Vitest as the single test runner](2026-09-14-vitest-runner.md), which realises the Vitest item under `## Deferred`. The `verify-notes` script and the consumer-owned workflow placement recorded here still stand.

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "node --test \"tests/**/*.test.js\"",
+    "test": "vitest run",
     "verify-notes": "ai-eng verify-notes .agents/notes"
   },
   "keywords": [],
@@ -20,6 +20,7 @@
   },
   "type": "module",
   "devDependencies": {
-    "@neuravoxel/ai-eng": "github:NeuraVoxel/ai-eng-kit#v0.1.16"
+    "@neuravoxel/ai-eng": "github:NeuraVoxel/ai-eng-kit#v0.1.16",
+    "vitest": "^5.0.0"
   }
 }
