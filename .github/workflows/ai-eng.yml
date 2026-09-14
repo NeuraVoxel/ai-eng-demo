@@ -9,9 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v6
+        with:
+          version: ^11.18.0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       # Agent Note format gate (docs/testing-policy.md). Add your package's
       # smallest checks (typecheck / tests / coverage) as extra steps here.
-      - run: npx --yes @neuravoxel/ai-eng verify-notes .agents/notes
+      - run: pnpm install
+      - run: pnpm exec ai-eng verify-notes .agents/notes
